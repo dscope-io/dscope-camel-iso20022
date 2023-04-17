@@ -10,7 +10,7 @@ plugins {
     id 'java' 
 }
 
-group 'dscope-camel-iso20022'
+group 'io.dscope'
 version '0.1.0'
 
 sourceCompatibility = 11

@@ -93,7 +93,7 @@ public class ISO20022Endpoint extends DefaultEndpoint {
 	}	
 
 	/**
-	 * @return the methodType
+	 * @return methodType
 	 */
 	public String getMethodType() {
 		return methodType;
@@ -107,56 +107,56 @@ public class ISO20022Endpoint extends DefaultEndpoint {
 	}	
 
 	/**
-	 * @return the type
+	 * @return type
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param set type of payload
+	 * @param type of payload
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * @return the documentType
+	 * @return documentType
 	 */
 	public String getDocumentType() {
 		return this.documentType;
 	}
 
 	/**
-	 * @param the documentType to set
+	 * @param documentType to set
 	 */
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 
 	/**
-	 * @return the messageType
+	 * @return messageType
 	 */
 	public String getMessageType() {
 		return this.messageType;
 	}
 
 	/**
-	 * @param the messageType to set
+	 * @param messageType to set
 	 */
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 	}
 	
 	/**
-	 * @return is MX message wrapped
+	 * @return wrapped 
 	 */
 	public Boolean getWrapped() {
 		return this.wrapped;
 	}
 
 	/**
-	 * @param set MX message wrapped
+	 * @param wrapped 
 	 */
 	public void setWrapped(Boolean wrapped) {
 		this.wrapped = wrapped;
