@@ -26,7 +26,7 @@ https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.1/jar
 ```
 
 ```
-implementation 'io.dscope:dscope-camel-iso20022:0.1.1'
+implementation 'io.dscope:dscope-camel-iso20022:0.1.1' 
 ```
 
 To install dScope Apache Camel ISO20022 Component to Apache Karavan Visual Studio Code plug-in add 
