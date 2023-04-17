@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io-dscope</groupId>
   <artifactId>dscope-camel-iso20022</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <name>dScopeCamelISO20022</name>
   <description>Apache Camel ISO20022 Component</description>
   
