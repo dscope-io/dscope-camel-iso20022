@@ -38,8 +38,8 @@ public class ISO20022Endpoint extends DefaultEndpoint {
 	@Metadata(description = "The type of ISO20022 operation to use",required = true)
     private String methodType;	
 	
-	@UriPath(label = "common", defaultValue = ISO20022Configuration.XML_TYPE, enums = "xml,json,dom")
-	@Metadata(description = "The type ISO20022 payload",required = false)
+	@UriParam(label = "common", enums = "xml,json,dom")
+	@Metadata(description = "The type ISO20022 payload", required = false)
     private String type = ISO20022Configuration.XML_TYPE;
 	
     @UriParam(label = "common")

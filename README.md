@@ -44,4 +44,4 @@ and content of [src/iso20022.json](./src/iso20022.json) file to .vscode/extensio
 
 # Build
 
-You need JDK 11+ to build IC4J Apache Camel Internet Computer Component.
+You need JDK 11+ to build dScope Apache Camel ISO20022 Component.
