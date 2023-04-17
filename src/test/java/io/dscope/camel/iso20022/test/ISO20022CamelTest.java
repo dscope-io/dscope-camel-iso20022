@@ -143,7 +143,7 @@ public final class ISO20022CamelTest extends CamelTestSupport {
         return new RouteBuilder() {
             @Override
             public void configure() {
-            	    			          	
+            	from("file:data?noop=true").to("iso20022:unmarshal").to("mock:unmarshalxml");    			          	
                 from("direct:marshalxml").to("iso20022:marshal?messageType=pain.001.001.03").to("mock:marshalxml");
                 from("direct:marshaljson").to("iso20022:marshal?messageType=pain.001.001.03&type=json").to("mock:marshaljson");
                 from("direct:marshaldom").to("iso20022:marshal?messageType=pain.001.001.03&type=dom").to("mock:marshaldom");

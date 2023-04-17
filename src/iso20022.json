@@ -11,7 +11,7 @@
     "supportLevel": "Preview",
     "groupId": "io-dscope",
     "artifactId": "dscope-camel-iso20022",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "scheme": "iso20022",
     "extendsScheme": "",
     "syntax": "iso20022:null",

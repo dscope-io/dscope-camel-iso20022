@@ -155,10 +155,11 @@ public class ISO20022Producer extends DefaultAsyncProducer {
 				documentType = (String) exchange.getMessage().getHeader(DOCUMENT_TYPE_HEADER);
 
 			AbstractMX mx;
-
+			
+			
 			switch (type) {
 			case ISO20022Configuration.JSON_TYPE:
-				String jsonInput = (String) exchange.getIn().getBody();
+				String jsonInput = (String) exchange.getIn().getBody(String.class);
 				LOG.debug("Unmarshalled JSON message: " + jsonInput);
 				mx = AbstractMX.fromJson(jsonInput);
 				break;
@@ -167,7 +168,7 @@ public class ISO20022Producer extends DefaultAsyncProducer {
 				mx = AbstractMX.parse(element);
 				break;					
 			default:
-				String xmlInput = (String) exchange.getIn().getBody();
+				String xmlInput = (String) exchange.getIn().getBody(String.class);
 				LOG.debug("Unmarshalled XML message: " + xmlInput);
 				mx = AbstractMX.parse(xmlInput);
 			}
