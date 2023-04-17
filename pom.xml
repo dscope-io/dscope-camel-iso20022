@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.ic4j</groupId>
-  <artifactId>ic4j-camel</artifactId>
-  <version>0.6.19</version>
-  <name>IC4JCamel</name>
-  <description>Apache Camel Internet Computer Component</description>
+  <groupId>io-dscope</groupId>
+  <artifactId>dscope-camel-iso20022</artifactId>
+  <version>0.1.0</version>
+  <name>dScopeCamelISO20022</name>
+  <description>Apache Camel ISO20022 Component</description>
   
 <properties>
 		<jdk.version>11</jdk.version>
-		<ic4j.agent.version>0.6.19.1</ic4j.agent.version>
-		<ic4j.candid.version>0.6.19</ic4j.candid.version>
 		<slf4j.version>2.0.6</slf4j.version>
 		<camel.version>3.20.3</camel.version>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -22,55 +20,20 @@
         <maven.test.skip>true</maven.test.skip>
 </properties>
 
-<dependencies>
-		<dependency>
-		    <groupId>org.ic4j</groupId>
-		    <artifactId>ic4j-agent</artifactId>
-		    <version>${ic4j.agent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ic4j</groupId>
-			<artifactId>ic4j-java11transport</artifactId>
-			<version>${ic4j.agent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ic4j</groupId>
-			<artifactId>ic4j-candid</artifactId>
-			<version>${ic4j.candid.version}</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.ic4j</groupId>
-		  <artifactId>ic4j-candid-gson</artifactId>
-		 <version>${ic4j.candid.version}</version>
-		</dependency>		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>	
+<dependencies>	
 		<!-- https://mvnrepository.com/artifact/org.apache.camel/camel-core -->
 		<dependency>
 		    <groupId>org.apache.camel</groupId>
 		    <artifactId>camel-core</artifactId>
 		    <version>${camel.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.14.2</version>
-		</dependency>		
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<dependency>
-		    <groupId>com.google.code.gson</groupId>
-		    <artifactId>gson</artifactId>
-		    <version>2.10.1</version>
-		</dependency>	
-		<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-		<dependency>
-		    <groupId>org.bouncycastle</groupId>
-		    <artifactId>bcprov-jdk15on</artifactId>
-		    <version>1.70</version>
-		</dependency>
+		
+	<!-- https://mvnrepository.com/artifact/com.prowidesoftware/pw-iso20022 -->
+	<dependency>
+	    <groupId>com.prowidesoftware</groupId>
+	    <artifactId>pw-iso20022</artifactId>
+	    <version>SRU2022-9.3.6</version>
+	</dependency>		
 		
 	</dependencies>
 	<build>

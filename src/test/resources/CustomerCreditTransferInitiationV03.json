@@ -1,0 +1,121 @@
+{
+  "cstmrCdtTrfInitn": {
+    "grpHdr": {
+      "msgId": "Message-ID-4711",
+      "creDtTm": {
+        "year": 2010,
+        "month": 11,
+        "day": 11,
+        "timezone": 0,
+        "hour": 9,
+        "minute": 30,
+        "second": 47,
+        "fractionalSecond": 0.000
+      },
+      "nbOfTxs": "2",
+      "initgPty": {
+        "nm": "Initiator Name"
+      }
+    },
+    "pmtInf": [
+      {
+        "pmtInfId": "Payment-Information-ID-4711",
+        "pmtMtd": "TRF",
+        "btchBookg": true,
+        "nbOfTxs": "2",
+        "ctrlSum": 6655.86,
+        "pmtTpInf": {
+          "svcLvl": {
+            "cd": "SEPA"
+          }
+        },
+        "reqdExctnDt": {
+          "year": 2010,
+          "month": 11,
+          "day": 25,
+          "timezone": -2147483648,
+          "hour": -2147483648,
+          "minute": -2147483648,
+          "second": -2147483648
+        },
+        "dbtr": {
+          "nm": "Debtor Name"
+        },
+        "dbtrAcct": {
+          "id": {
+            "iban": "DE87200500001234567890"
+          }
+        },
+        "dbtrAgt": {
+          "finInstnId": {
+            "bic": "BANKDEFFXXX"
+          }
+        },
+        "chrgBr": "SLEV",
+        "cdtTrfTxInf": [
+          {
+            "pmtId": {
+              "endToEndId": "OriginatorID1234"
+            },
+            "amt": {
+              "instdAmt": {
+                "value": 6543.14,
+                "ccy": "EUR"
+              }
+            },
+            "cdtrAgt": {
+              "finInstnId": {
+                "bic": "SPUEDE2UXXX"
+              }
+            },
+            "cdtr": {
+              "nm": "Creditor Name"
+            },
+            "cdtrAcct": {
+              "id": {
+                "iban": "DE21500500009876543210"
+              }
+            },
+            "rmtInf": {
+              "ustrd": [
+                "Unstructured Remittance Information"
+              ]
+            }
+          },
+          {
+            "pmtId": {
+              "endToEndId": "OriginatorID1235"
+            },
+            "amt": {
+              "instdAmt": {
+                "value": 112.72,
+                "ccy": "EUR"
+              }
+            },
+            "cdtrAgt": {
+              "finInstnId": {
+                "bic": "SPUEDE2UXXX"
+              }
+            },
+            "cdtr": {
+              "nm": "Other Creditor Name"
+            },
+            "cdtrAcct": {
+              "id": {
+                "iban": "DE21500500001234567897"
+              }
+            },
+            "rmtInf": {
+              "ustrd": [
+                "Unstructured Remittance Information"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "type": "MX",
+  "@xmlns": "urn:iso:std:iso:20022:tech:xsd:pain.001.001.03",
+  "identifier": "pain.001.001.03"
+}

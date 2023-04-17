@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-package org.ic4j.camel;
+package io.dscope.camel.iso20022;
 
 import java.util.Map;
 
@@ -23,21 +23,22 @@ import org.apache.camel.support.DefaultComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component("ic")
-public class ICComponent extends DefaultComponent {
+@Component("iso20022")
+public class ISO20022Component extends DefaultComponent {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ICComponent.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ISO20022Component.class);
 
 	@Override
-	protected ICEndpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-		ICEndpoint endpoint = new ICEndpoint(uri, this);
+	protected ISO20022Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+		ISO20022Endpoint endpoint = new ISO20022Endpoint(uri, this);
 		
 		setProperties(endpoint, parameters);
 		
-		if (remaining.startsWith(ICConfiguration.QUERY_PREFIX))
-			endpoint.setMethodType(ICConfiguration.QUERY_PREFIX);
+		if (remaining.startsWith(ISO20022Configuration.MARSHAL_PREFIX))
+			endpoint.setMethodType(ISO20022Configuration.MARSHAL_PREFIX);
 		else
-			endpoint.setMethodType(ICConfiguration.UPDATE_PREFIX);
+			endpoint.setMethodType(ISO20022Configuration.UNMARSHAL_PREFIX);
+		
 		return endpoint;
 	}
 
