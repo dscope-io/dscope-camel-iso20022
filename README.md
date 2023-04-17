@@ -13,20 +13,20 @@ The dScope ISO20022 Camel component allows marshaling and unmarshaling [Swift IS
 
 To add Java dScope Apache Camel ISO20022 Component library to your Java project use Maven or Gradle import from Maven Central.
 
-<a href="https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.0/jar">
-https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.0/jar
+<a href="https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.1/jar">
+https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.1/jar
 </a>
 
 ```
 <dependency>
   <groupId>io.dscope</groupId>
   <artifactId>dscope-camel-iso20022</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
 ```
-implementation 'io.dscope:dscope-camel-iso20022:0.1.0'
+implementation 'io.dscope:dscope-camel-iso20022:0.1.1'
 ```
 
 To install dScope Apache Camel ISO20022 Component to Apache Karavan Visual Studio Code plug-in add 
