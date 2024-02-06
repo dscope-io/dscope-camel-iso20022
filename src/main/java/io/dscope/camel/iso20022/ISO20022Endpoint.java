@@ -29,7 +29,7 @@ import org.apache.camel.util.UnsafeUriCharactersEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@UriEndpoint(firstVersion = "3.19.0", scheme = "iso20022", syntax = "iso20022", title = "ISO20022 Document Processor", category = { Category.PAYMENT})
+@UriEndpoint(firstVersion = "3.19.0", scheme = "iso20022", syntax = "iso20022", title = "ISO20022 Document Processor", category = { Category.DOCUMENT})
 public class ISO20022Endpoint extends DefaultEndpoint {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ISO20022Endpoint.class);

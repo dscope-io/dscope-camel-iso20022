@@ -13,20 +13,20 @@ The dScope ISO20022 Camel component allows marshaling and unmarshaling [Swift IS
 
 To add Java dScope Apache Camel ISO20022 Component library to your Java project use Maven or Gradle import from Maven Central.
 
-<a href="https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.1/jar">
-https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.1.1/jar
+<a href="https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.2.0/jar">
+https://search.maven.org/artifact/dscope/dscope-camel-iso20022/0.2.0/jar
 </a>
 
 ```
 <dependency>
   <groupId>io.dscope</groupId>
   <artifactId>dscope-camel-iso20022</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
 ```
-implementation 'io.dscope:dscope-camel-iso20022:0.1.1' 
+implementation 'io.dscope:dscope-camel-iso20022:0.2.0' 
 ```
 
 To install dScope Apache Camel ISO20022 Component to Apache Karavan Visual Studio Code plug-in add 
@@ -35,13 +35,13 @@ To install dScope Apache Camel ISO20022 Component to Apache Karavan Visual Studi
 iso20022
 ```
 
-to .vscode/extensions/camel-karavan.karavan-3.20.1/components/components.properties file
+to .vscode/extensions/camel-karavan.karavan-4.3.0/components/components.properties file
 
-and content of [src/iso20022.json](./src/iso20022.json) file to .vscode/extensions/camel-karavan.karavan-3.20.1/components/components.json file.
+and content of [src/iso20022.json](./src/iso20022.json) file to .vscode/extensions/camel-karavan.karavan-4.3.0/components/components.json file.
 
 
 
 
 # Build
 
-You need JDK 11+ to build dScope Apache Camel ISO20022 Component.
+You need JDK 17+ to build dScope Apache Camel ISO20022 Component.

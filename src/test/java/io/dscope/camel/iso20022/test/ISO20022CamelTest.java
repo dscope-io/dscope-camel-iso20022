@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit5.CamelTestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -100,37 +101,37 @@ public final class ISO20022CamelTest extends CamelTestSupport {
 
 	        template.sendBody("direct:marshaljson", payload);   	        
 	    
-	        assertMockEndpointsSatisfied();	
+	        MockEndpoint.assertIsSatisfied(this.context());	
 	        
 	        getMockEndpoint("mock:marshaljson");
 
 	        template.sendBody("direct:marshaljson", payload);   	        
 	    
-	        assertMockEndpointsSatisfied();	
+	        MockEndpoint.assertIsSatisfied(this.context());
 	        
 	        getMockEndpoint("mock:marshaldom");
 
 	        template.sendBody("direct:marshaldom", payload);   	        
 	    
-	        assertMockEndpointsSatisfied();	        
+	        MockEndpoint.assertIsSatisfied(this.context());;	        
 	        			
 	        getMockEndpoint("mock:unmarshalxml").expectedBodiesReceived(payload);
 
 	        template.sendBody("direct:unmarshalxml", xml);   	        
 
-	        assertMockEndpointsSatisfied();	
+	        MockEndpoint.assertIsSatisfied(this.context());	
 	        
 	        getMockEndpoint("mock:unmarshaljson").expectedBodiesReceived(payload);
 
 	        template.sendBody("direct:unmarshaljson", json);   	        
 
-	        assertMockEndpointsSatisfied();	
+	        MockEndpoint.assertIsSatisfied(this.context());
 	        
 	        getMockEndpoint("mock:unmarshaldom");
 
 	        template.sendBody("direct:unmarshaldom", mx.element());   	        
 
-	        assertMockEndpointsSatisfied();		        
+	        MockEndpoint.assertIsSatisfied(this.context());		        
 
 		} catch (Exception e) {
 			LOG.error(e.getLocalizedMessage(), e);
