@@ -2,15 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io-dscope</groupId>
   <artifactId>dscope-camel-iso20022</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
   <name>dScopeCamelISO20022</name>
   <description>Apache Camel ISO20022 Component</description>
   
 <properties>
 		<jdk.version>17</jdk.version>
 		<slf4j.version>2.0.6</slf4j.version>
-		<camel.version>4.3.0</camel.version>
-		<maven.compiler.source>11</maven.compiler.source>
+		<camel.version>4.4.0</camel.version>
+		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <!-- plugin versions -->
         <version.plugin.compiler>3.10.1</version.plugin.compiler>

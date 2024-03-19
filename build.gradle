@@ -47,7 +47,7 @@ test {
 
 dependencies {
 	// https://mvnrepository.com/artifact/org.apache.camel/camel-core
-	implementation group: 'org.apache.camel', name: 'camel-core', version: '4.3.0'
+	implementation group: 'org.apache.camel', name: 'camel-core', version: '4.4.0'
 	
 	// https://mvnrepository.com/artifact/com.prowidesoftware/pw-iso20022
 	implementation group: 'com.prowidesoftware', name: 'pw-iso20022', version: 'SRU2023-9.4.4'
@@ -58,7 +58,7 @@ dependencies {
 	implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.6'		
 	
 	// https://mvnrepository.com/artifact/org.apache.camel/camel-test-junit5
-	testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: '4.3.0'
+	testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: '4.4.0'
 	
 	testImplementation  group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.1'		
 	

@@ -35,9 +35,9 @@ To install dScope Apache Camel ISO20022 Component to Apache Karavan Visual Studi
 iso20022
 ```
 
-to .vscode/extensions/camel-karavan.karavan-4.3.0/components/components.properties file
+to .vscode/extensions/camel-karavan.karavan-4.4.0/components/components.properties file
 
-and content of [src/iso20022.json](./src/iso20022.json) file to .vscode/extensions/camel-karavan.karavan-4.3.0/components/components.json file.
+and content of [src/iso20022.json](./src/iso20022.json) file to .vscode/extensions/camel-karavan.karavan-4.4.0/components/components.json file.
 
 
 
