@@ -1,46 +1,65 @@
 - route:
     id: pain001-unmarshal-route
     from:
-      uri: file:data/input
+      id: from6aa6
+      uri: file
       parameters:
         noop: true
         delay: 5000
+        directoryName: data/input
       steps:
         - log:
+            id: log8a07
             message: "Processing ISO20022 message: ${header.CamelFileName}"
         - to:
-            uri: iso20022:unmarshal
+            id: toff39
+            uri: iso20022
         - log:
+            id: log31ee
             message: "Unmarshalled payload class: ${body.getClass().name}"
         - to:
-            uri: iso20022:marshal
+            id: to1be4
+            uri: iso20022
             parameters:
               messageType: pain.001.001.03
               documentType: cstmrCdtTrfInitn
               type: json
         - to:
-            uri: file:data/output
+            id: to3bd7
+            uri: file
             parameters:
-              fileName: "${header.CamelFileName}.json"
-
+              fileName: ${header.CamelFileName}.json
+              directoryName: data/output
 - route:
     id: pain001-marshal-route
     from:
-      uri: timer://marshal?period=60s&repeatCount=1
+      id: from6122
+      uri: timer
+      parameters:
+        timerName: //marshal?period=60s&repeatCount=1
       steps:
         - log:
-            message: "Loading sample ISO20022 pain.001.001.03 XML"
+            id: log92cc
+            message: Loading sample ISO20022 pain.001.001.03 XML
         - setBody:
-            simple: "resource:file:data/input/sample-credit-transfer.xml"
+            id: setBodya11a
+            expression:
+              simple:
+                id: simple2fb9
+                expression: resource:file:data/input/sample-credit-transfer.xml
         - to:
-            uri: iso20022:unmarshal
+            id: to0b5a
+            uri: iso20022
         - to:
-            uri: iso20022:marshal
+            id: toef32
+            uri: iso20022
             parameters:
               messageType: pain.001.001.03
               documentType: cstmrCdtTrfInitn
               type: xml
         - to:
-            uri: file:data/output
+            id: to4f9e
+            uri: file
             parameters:
-              fileName: "sample-credit-transfer.normalized.xml"
+              fileName: sample-credit-transfer.normalized.xml
+              directoryName: data/output

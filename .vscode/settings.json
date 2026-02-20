@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^gh api -X PUT repos/dscope-io/dscope-camel-iso20022/topics -H 'Accept: application/vnd\\.github\\+json' -f 'names\\[\\]=apache-camel' -f 'names\\[\\]=iso20022' -f 'names\\[\\]=mx-messages' -f 'names\\[\\]=pain001' -f 'names\\[\\]=java' -f 'names\\[\\]=maven' -f 'names\\[\\]=prowide' -f 'names\\[\\]=integration'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^gh api repos/dscope-io/dscope-camel-iso20022 --jq '\\{description: \\.description, topics: \\.topics\\}'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
