@@ -1,71 +1,182 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>io-dscope</groupId>
-  <artifactId>dscope-camel-iso20022</artifactId>
-  <version>0.2.0</version>
-  <name>dScopeCamelISO20022</name>
-  <description>Apache Camel ISO20022 Component</description>
-  
-<properties>
-		<jdk.version>17</jdk.version>
-		<slf4j.version>2.0.6</slf4j.version>
-		<camel.version>4.4.0</camel.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-        <!-- plugin versions -->
-        <version.plugin.compiler>3.10.1</version.plugin.compiler>
-        <version.plugin.dependency>3.0.0</version.plugin.dependency>
-        <version.plugin.jar>3.0.2</version.plugin.jar>
-        <version.plugin.resources>2.7</version.plugin.resources>
-        <maven.test.skip>true</maven.test.skip>
-</properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-<dependencies>	
-		<!-- https://mvnrepository.com/artifact/org.apache.camel/camel-core -->
-		<dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-core</artifactId>
-		    <version>${camel.version}</version>
-		</dependency>
-		
-	<!-- https://mvnrepository.com/artifact/com.prowidesoftware/pw-iso20022 -->
-	<dependency>
-	    <groupId>com.prowidesoftware</groupId>
-	    <artifactId>pw-iso20022</artifactId>
-	    <version>SRU2023-9.4.4</version>
-	</dependency>	
-	
-	<dependency>
-	    <groupId>javax.xml.bind</groupId>
-	    <artifactId>jaxb-api</artifactId>
-	    <version>2.3.1</version>
-	</dependency>		
-	
-	<dependency>
-	    <groupId>org.glassfish.jaxb</groupId>
-	    <artifactId>jaxb-runtime</artifactId>
-	    <version>2.3.1</version>
-	</dependency>	
-		
-	</dependencies>
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>	
-		<plugins>
+    <groupId>io.dscope</groupId>
+    <artifactId>dscope-camel-iso20022</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>dScopeCamelISO20022</name>
+    <description>Apache Camel ISO20022 Component</description>
+    <url>https://github.com/dscope-io/dscope-camel-iso20022</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>dscope-io</id>
+            <name>DScope Development Team</name>
+            <email>dev@dscope.io</email>
+            <organization>DScope</organization>
+            <organizationUrl>https://github.com/dscope-io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/dscope-io/dscope-camel-iso20022.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:dscope-io/dscope-camel-iso20022.git</developerConnection>
+        <url>https://github.com/dscope-io/dscope-camel-iso20022</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <jdk.version>21</jdk.version>
+        <camel.version>4.15.0</camel.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <iso20022.version>SRU2025-10.3.4</iso20022.version>
+        <jakarta.xml.bind.api.version>4.0.4</jakarta.xml.bind.api.version>
+        <jaxb.runtime.version>4.0.5</jaxb.runtime.version>
+        <lifecycle.mapping.version>1.0.0</lifecycle.mapping.version>
+        <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
+        <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
+        <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
+        <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
+        <central.publishing.plugin.version>0.10.0</central.publishing.plugin.version>
+        <maven.compiler.source>${jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-bom</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.prowidesoftware</groupId>
+            <artifactId>pw-iso20022</artifactId>
+            <version>${iso20022.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta.xml.bind.api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb.runtime.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>${lifecycle.mapping.version}</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.camel</groupId>
+                                        <artifactId>camel-package-maven-plugin</artifactId>
+                                        <versionRange>[4.0,)</versionRange>
+                                        <goals>
+                                            <goal>generate</goal>
+                                            <goal>generate-postcompile</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>false</runOnIncremental>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
             <plugin>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-package-maven-plugin</artifactId>
                 <version>${camel.version}</version>
                 <configuration>
-                    <!-- set to true to make build fail fast if missing documentation in docs files -->
-                    <failFast>false</failFast>
+                    <failFast>true</failFast>
                 </configuration>
                 <executions>
                     <execution>
+                        <?m2e execute onConfiguration,onIncremental?>
                         <id>generate</id>
                         <goals>
                             <goal>generate</goal>
@@ -89,44 +200,94 @@
                     </dependency>
                 </dependencies>
             </plugin>
-           <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                 <version>${version.plugin.compiler}</version>
-                <executions>
-                    <execution>
-                        <id>recompile</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <phase>process-classes</phase>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/generated/java</source>
-                            </sources>
-                            <resources>
-                                <resource>
-                                    <directory>src/generated/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>        
-		</plugins>
-	</build>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
+    <profiles>
+        <profile>
+            <id>central-release</id>
+            <properties>
+                <maven.deploy.skip>true</maven.deploy.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven.source.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven.javadoc.plugin.version}</version>
+                        <configuration>
+                            <doclint>none</doclint>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven.gpg.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central.publishing.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <deploymentName>${project.groupId}:${project.artifactId}:${project.version}</deploymentName>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>VALIDATED</waitUntil>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>central-publish</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

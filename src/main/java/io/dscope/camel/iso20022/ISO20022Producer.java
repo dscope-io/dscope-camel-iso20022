@@ -16,9 +16,9 @@
 
 package io.dscope.camel.iso20022;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-
-import javax.xml.bind.annotation.XmlType;
+import java.lang.reflect.Method;
 
 import org.w3c.dom.Element;
 
@@ -210,13 +210,7 @@ public class ISO20022Producer extends DefaultAsyncProducer {
 	Field getDocumentField(Class mxClass, String documentType) throws Exception
 	{
 		if (documentType == null) {
-			String[] elements = {};
-
-			if (mxClass.isAnnotationPresent(XmlType.class)) {
-				XmlType xmlType = (XmlType) mxClass.getAnnotation(XmlType.class);
-
-				elements = xmlType.propOrder();
-			}
+			String[] elements = this.getXmlTypePropOrder(mxClass);
 
 			if (elements.length == 0)
 				throw new Exception("Unknown document type");
@@ -224,9 +218,34 @@ public class ISO20022Producer extends DefaultAsyncProducer {
 			documentType = elements[0];
 		}
 
-		Field[] fields = mxClass.getDeclaredFields();
-		
 		return mxClass.getDeclaredField(documentType);		
+	}
+
+	@SuppressWarnings("unchecked")
+	String[] getXmlTypePropOrder(Class<?> mxClass) {
+		String[] annotationTypes = {
+			"jakarta.xml.bind.annotation.XmlType",
+			"javax.xml.bind.annotation.XmlType"
+		};
+
+		for (String annotationType : annotationTypes) {
+			try {
+				Class<? extends Annotation> xmlTypeClass = (Class<? extends Annotation>) Class.forName(annotationType);
+				if (!mxClass.isAnnotationPresent(xmlTypeClass)) {
+					continue;
+				}
+
+				Annotation annotation = mxClass.getAnnotation(xmlTypeClass);
+				Method propOrder = xmlTypeClass.getMethod("propOrder");
+				return (String[]) propOrder.invoke(annotation);
+			} catch (ClassNotFoundException e) {
+				// JAXB package not present, continue with the next supported annotation type.
+			} catch (Exception e) {
+				LOG.debug("Unable to resolve propOrder from {}", annotationType, e);
+			}
+		}
+
+		return new String[0];
 	}
 
 	Class<?> getMXClass(String messageType) throws ClassNotFoundException {

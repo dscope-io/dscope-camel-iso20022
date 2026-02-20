@@ -1,0 +1,46 @@
+- route:
+    id: pain001-unmarshal-route
+    from:
+      uri: file:data/input
+      parameters:
+        noop: true
+        delay: 5000
+      steps:
+        - log:
+            message: "Processing ISO20022 message: ${header.CamelFileName}"
+        - to:
+            uri: iso20022:unmarshal
+        - log:
+            message: "Unmarshalled payload class: ${body.getClass().name}"
+        - to:
+            uri: iso20022:marshal
+            parameters:
+              messageType: pain.001.001.03
+              documentType: cstmrCdtTrfInitn
+              type: json
+        - to:
+            uri: file:data/output
+            parameters:
+              fileName: "${header.CamelFileName}.json"
+
+- route:
+    id: pain001-marshal-route
+    from:
+      uri: timer://marshal?period=60s&repeatCount=1
+      steps:
+        - log:
+            message: "Loading sample ISO20022 pain.001.001.03 XML"
+        - setBody:
+            simple: "resource:file:data/input/sample-credit-transfer.xml"
+        - to:
+            uri: iso20022:unmarshal
+        - to:
+            uri: iso20022:marshal
+            parameters:
+              messageType: pain.001.001.03
+              documentType: cstmrCdtTrfInitn
+              type: xml
+        - to:
+            uri: file:data/output
+            parameters:
+              fileName: "sample-credit-transfer.normalized.xml"

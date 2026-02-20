@@ -1,159 +1,170 @@
 package io.dscope.camel.iso20022.test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Properties;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 
-import javax.xml.bind.annotation.XmlType;
-
+import org.apache.camel.Exchange;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit5.CamelTestSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import com.prowidesoftware.swift.model.mx.AbstractMX;
 
+import io.dscope.camel.iso20022.ISO20022Producer;
+
 public final class ISO20022CamelTest extends CamelTestSupport {
-	static Logger LOG;
 
-	static String PROPERTIES_FILE_NAME = "application.properties";
-	
-	static final String SWIFT_XML_NODE_FILE = "CustomerCreditTransferInitiationV03.xml";
-	
-	static final String SWIFT_JSON_NODE_FILE = "CustomerCreditTransferInitiationV03.json";
-	
-		
-	static Properties env;
+    private static final String SWIFT_XML_NODE_FILE = "CustomerCreditTransferInitiationV03.xml";
+    private static final String SWIFT_JSON_NODE_FILE = "CustomerCreditTransferInitiationV03.json";
 
-	static {
-		LOG = LoggerFactory.getLogger(ISO20022CamelTest.class);
-		
-		InputStream propInputStream = ISO20022CamelTest.class.getClassLoader()
-				.getResourceAsStream(PROPERTIES_FILE_NAME);
+    @Test
+    public void marshalProducesXmlJsonAndDom() throws Exception {
+        AbstractMX mx = AbstractMX.parse(readResource(SWIFT_XML_NODE_FILE));
 
-		env = new Properties();
-		try {
-			env.load(propInputStream);			
-		} catch (IOException e) {
-			LOG.error(e.getLocalizedMessage(), e);
-			Assertions.fail(e.getMessage());
-		}		
-	}
+        String xml = template.requestBody("direct:marshalxml", mx, String.class);
+        String json = template.requestBody("direct:marshaljson", mx, String.class);
+        Object dom = template.requestBody("direct:marshaldom", mx);
 
-	@Test
-	public void test() {
+        Assertions.assertNotNull(xml);
+        Assertions.assertFalse(xml.isBlank());
+        Assertions.assertNotNull(json);
+        Assertions.assertFalse(json.isBlank());
+        Assertions.assertInstanceOf(Element.class, dom);
+    }
 
-		try {            
-            InputStream inputStream = ISO20022CamelTest.class.getClassLoader().getResourceAsStream(SWIFT_XML_NODE_FILE);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String xml = "";
-            
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                xml += line;
-            }  
-            
-            inputStream = ISO20022CamelTest.class.getClassLoader().getResourceAsStream(SWIFT_JSON_NODE_FILE);
-            inputStreamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(inputStreamReader);
-            String json = "";
-            
-            while ((line = bufferedReader.readLine()) != null) {
-                json += line;
-            }
-			
-			AbstractMX mx = AbstractMX.parse(xml);
-			
-			Class mxClass = mx.getClass();
-			
-			String[] elements = {};
-			
-			if(mxClass.isAnnotationPresent(XmlType.class))
-			{
-				XmlType xmlType = (XmlType) mxClass.getAnnotation(XmlType.class);
-				
-				elements = xmlType.propOrder();
-			}
-			
-			Field[] fields = mxClass.getDeclaredFields();
-			
-			Object payload= null;
-			
-			if(elements.length > 0)
-			{				
-				Field payloadField = mxClass.getDeclaredField(elements[0]);
-				
-				payloadField.setAccessible(true);
-				payload = payloadField.get(mx);
-			}
-			
-			LOG.info("Parsed message type: " + mx.getMxId().id());
-			
-	        getMockEndpoint("mock:marshaljson");
+    @Test
+    public void unmarshalParsesXmlJsonAndDom() throws Exception {
+        String xml = readResource(SWIFT_XML_NODE_FILE);
+        String json = readResource(SWIFT_JSON_NODE_FILE);
+        Element dom = AbstractMX.parse(xml).element();
 
-	        template.sendBody("direct:marshaljson", payload);   	        
-	    
-	        MockEndpoint.assertIsSatisfied(this.context());	
-	        
-	        getMockEndpoint("mock:marshaljson");
+        Exchange xmlExchange = template.request("direct:unmarshalxml", exchange -> exchange.getMessage().setBody(xml));
+        Exchange jsonExchange = template.request("direct:unmarshaljson", exchange -> exchange.getMessage().setBody(json));
+        Exchange domExchange = template.request("direct:unmarshaldom", exchange -> exchange.getMessage().setBody(dom));
 
-	        template.sendBody("direct:marshaljson", payload);   	        
-	    
-	        MockEndpoint.assertIsSatisfied(this.context());
-	        
-	        getMockEndpoint("mock:marshaldom");
+        Object xmlBody = xmlExchange.getMessage().getBody();
+        Object jsonBody = jsonExchange.getMessage().getBody();
 
-	        template.sendBody("direct:marshaldom", payload);   	        
-	    
-	        MockEndpoint.assertIsSatisfied(this.context());;	        
-	        			
-	        getMockEndpoint("mock:unmarshalxml").expectedBodiesReceived(payload);
+        Assertions.assertEquals("pain.001.001.03",
+                xmlExchange.getMessage().getHeader(ISO20022Producer.MESSAGE_TYPE_HEADER));
+        Assertions.assertEquals(xmlBody.getClass(), jsonBody.getClass());
+        Assertions.assertNull(domExchange.getException());
+    }
 
-	        template.sendBody("direct:unmarshalxml", xml);   	        
+    @Test
+    public void unmarshalWrappedReturnsMxMessage() throws Exception {
+        Object wrapped = template.requestBody("direct:unmarshalwrapped", readResource(SWIFT_XML_NODE_FILE));
 
-	        MockEndpoint.assertIsSatisfied(this.context());	
-	        
-	        getMockEndpoint("mock:unmarshaljson").expectedBodiesReceived(payload);
+        Assertions.assertInstanceOf(AbstractMX.class, wrapped);
+        Assertions.assertEquals("pain.001.001.03", ((AbstractMX) wrapped).getMxId().id());
+    }
 
-	        template.sendBody("direct:unmarshaljson", json);   	        
+    @Test
+    public void marshalUsesHeadersWhenEndpointOptionsAreNotProvided() throws Exception {
+        AbstractMX mx = AbstractMX.parse(readResource(SWIFT_XML_NODE_FILE));
+        Object document = extractFirstDocument(mx);
 
-	        MockEndpoint.assertIsSatisfied(this.context());
-	        
-	        getMockEndpoint("mock:unmarshaldom");
+        String json = template.request("direct:marshalfromheaders", exchange -> {
+            exchange.getMessage().setBody(document);
+            exchange.getMessage().setHeader(ISO20022Producer.MESSAGE_TYPE_HEADER, "pain.001.001.03");
+            exchange.getMessage().setHeader(ISO20022Producer.DOCUMENT_TYPE_HEADER, "cstmrCdtTrfInitn");
+        }).getMessage().getBody(String.class);
 
-	        template.sendBody("direct:unmarshaldom", mx.element());   	        
+        Assertions.assertNotNull(json);
+        Assertions.assertFalse(json.isBlank());
+    }
 
-	        MockEndpoint.assertIsSatisfied(this.context());		        
+    @Test
+    public void marshalFailsWhenMessageTypeIsMissing() throws Exception {
+        AbstractMX mx = AbstractMX.parse(readResource(SWIFT_XML_NODE_FILE));
+        Object document = extractFirstDocument(mx);
 
-		} catch (Exception e) {
-			LOG.error(e.getLocalizedMessage(), e);
-			Assertions.fail(e.getMessage());
-		}
-	}
-	
+        Assertions.assertThrows(CamelExecutionException.class,
+                () -> template.requestBody("direct:marshalmissingtype", document, String.class));
+    }
+
     @Override
     protected RoutesBuilder createRouteBuilder() {
         return new RouteBuilder() {
             @Override
             public void configure() {
-            	from("file:data?noop=true").to("iso20022:unmarshal").to("mock:unmarshalxml");    			          	
-                from("direct:marshalxml").to("iso20022:marshal?messageType=pain.001.001.03").to("mock:marshalxml");
-                from("direct:marshaljson").to("iso20022:marshal?messageType=pain.001.001.03&type=json").to("mock:marshaljson");
-                from("direct:marshaldom").to("iso20022:marshal?messageType=pain.001.001.03&type=dom").to("mock:marshaldom");
-                from("direct:unmarshalxml").to("iso20022:unmarshal").to("mock:unmarshalxml");
-                from("direct:unmarshaljson").to("iso20022:unmarshal?type=json").to("mock:unmarshaljson");
-                from("direct:unmarshaldom").to("iso20022:unmarshal?type=dom").to("mock:unmarshaldom");
-                        	
+                from("direct:marshalxml").routeId("directMarshalXml")
+                        .to("iso20022:marshal?messageType=pain.001.001.03")
+                        .to("mock:marshalxml");
+                from("direct:marshaljson").routeId("directMarshalJson")
+                        .to("iso20022:marshal?messageType=pain.001.001.03&type=json")
+                        .to("mock:marshaljson");
+                from("direct:marshaldom").routeId("directMarshalDom")
+                        .to("iso20022:marshal?messageType=pain.001.001.03&type=dom")
+                        .to("mock:marshaldom");
+                from("direct:unmarshalxml").routeId("directUnmarshalXml")
+                        .to("iso20022:unmarshal")
+                        .to("mock:unmarshalxml");
+                from("direct:unmarshaljson").routeId("directUnmarshalJson")
+                        .to("iso20022:unmarshal?type=json")
+                        .to("mock:unmarshaljson");
+                from("direct:unmarshaldom").routeId("directUnmarshalDom")
+                        .to("iso20022:unmarshal?type=dom")
+                        .to("mock:unmarshaldom");
+                from("direct:unmarshalwrapped").routeId("directUnmarshalWrapped")
+                        .to("iso20022:unmarshal?wrapped=true")
+                        .to("mock:unmarshalwrapped");
+                from("direct:marshalfromheaders").routeId("directMarshalFromHeaders")
+                        .to("iso20022:marshal?type=json")
+                        .to("mock:marshalfromheaders");
+                from("direct:marshalmissingtype").routeId("directMarshalMissingType")
+                        .to("iso20022:marshal?type=json")
+                        .to("mock:marshalmissingtype");
             }
         };
     }
 
+    private static Object extractFirstDocument(AbstractMX mx) throws Exception {
+        Class<?> mxClass = mx.getClass();
+        String documentType = firstPropOrderEntry(mxClass);
+        Field payloadField = mxClass.getDeclaredField(documentType);
+        payloadField.setAccessible(true);
+        return payloadField.get(mx);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String firstPropOrderEntry(Class<?> mxClass) throws Exception {
+        String[] annotationTypes = { "jakarta.xml.bind.annotation.XmlType", "javax.xml.bind.annotation.XmlType" };
+
+        for (String annotationType : annotationTypes) {
+            try {
+                Class<? extends Annotation> xmlTypeClass = (Class<? extends Annotation>) Class.forName(annotationType);
+                if (!mxClass.isAnnotationPresent(xmlTypeClass)) {
+                    continue;
+                }
+                Annotation annotation = mxClass.getAnnotation(xmlTypeClass);
+                Method propOrderMethod = xmlTypeClass.getMethod("propOrder");
+                String[] propOrder = (String[]) propOrderMethod.invoke(annotation);
+                if (propOrder.length > 0) {
+                    return propOrder[0];
+                }
+            } catch (ClassNotFoundException e) {
+                // Ignore and try alternative JAXB annotation package.
+            }
+        }
+
+        throw new IllegalStateException("Unable to resolve document type from MX class annotations");
+    }
+
+    private static String readResource(String fileName) throws IOException {
+        try (InputStream inputStream = ISO20022CamelTest.class.getClassLoader().getResourceAsStream(fileName)) {
+            if (inputStream == null) {
+                throw new IOException("Missing resource: " + fileName);
+            }
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
 }
