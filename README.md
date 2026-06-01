@@ -20,19 +20,19 @@
 <dependency>
   <groupId>io.dscope</groupId>
   <artifactId>dscope-camel-iso20022</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
 Maven Central:
 
-[https://search.maven.org/artifact/io.dscope/dscope-camel-iso20022/1.0.0/jar](https://search.maven.org/artifact/io.dscope/dscope-camel-iso20022/1.0.0/jar)
+[https://search.maven.org/artifact/io.dscope/dscope-camel-iso20022/1.1.0/jar](https://search.maven.org/artifact/io.dscope/dscope-camel-iso20022/1.1.0/jar)
 
 ## Requirements
 
 - Java 21+
 - Maven 3.9+
-- Apache Camel 4.15.0 (component is built and tested with this version)
+- Apache Camel 4.20.0 (component is built and tested with this version)
 
 ## Component URI
 
